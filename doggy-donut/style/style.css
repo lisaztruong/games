@@ -1,0 +1,14 @@
+body {
+	background: #7d7d7d;
+	font-family: Helvetica, sans-serif;
+	line-height: 1.5em;
+	padding:10px;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHkAAAAmCAAAAADFSWu3AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAFdSURBVFjD7VbLtsQgCONrq6jt/y/Hjo+qhXBndxeyLYdAQix03XFGrwbH85uSwvvbsYQPMeWI7A41/DclJWqVL6lyi5AKemQd2XFBDR6ghtQ7ozpXGT2xCs4hlQZH9Ae1lAxeH9YVPlKoKTTMdYlzvYnP9PCD7MZBtOCKOvBB81yVVER8HHIOXylmRHHNWfggZa4ERu+yn6awTQaBDxIK5x5nUtWcnAGErTIoOaSNBbzU0RltsSUDAU01L713e6XY9FfumnBp0UsI+Q/+qo1RhKWHnZNkl4UF/uqN5Zn9+D6q6JOXRGTbX25+WwmXNmT/Rdi1sWG32d4oXrSZ+LOEjbP2pJQOluy3Nmz/m3RTEyqtE9+WDj+csDHlJenEq+i3Nifwjre0196wx8ro54WFhT/Ng4zfIpb9J2GXzmhfQ/saEonf19C+hhrF+xqSGtvX0L6G9jUkBxb2v15DHyokUTrfEbDAAAAAAElFTkSuQmCC');
+	background-attachment: fixed;
+}
+
+body.game {
+	margin-top:20px;
+	max-width:1000px;
+	margin:auto;
+}
