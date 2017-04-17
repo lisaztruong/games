@@ -1,3 +1,6 @@
+// run in terminal
+// python -m SimpleHTTPServer
+
 // Create our 'main' state that will contain the game
 var mainState = {
   preload: function() {
