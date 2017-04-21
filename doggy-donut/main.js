@@ -1,5 +1,11 @@
 // run in terminal
 // python -m SimpleHTTPServer
+// local host 8000
+
+// height and width
+var height = 490;
+var width = 400;
+
 
 // Create our 'main' state that will contain the game
 var mainState = {
@@ -55,7 +61,7 @@ var mainState = {
   update: function() {
       // If the doggy is out of the screen (too high or too low)
       // Call the 'restartGame' function
-      if (this.doggy.y < 0 || this.doggy.y > 490){
+      if (this.doggy.y < 0 || this.doggy.y > height){
         this.restartGame();
       }
 
@@ -123,7 +129,7 @@ var mainState = {
       // With one big hole at position 'hole' and 'hole + 1'
       for (var i = 0; i < 8; i++)
           if (i != hole && i != hole + 1)
-              this.addOnePipe(400, i * 60 + 10);
+              this.addOnePipe(width, i * 60 + 10);
 
       this.score += 1;
       this.labelScore.text = this.score;
@@ -148,8 +154,8 @@ var mainState = {
   },
 };
 
-// Initialize Phaser, and create a 400px by 490px game
-var game = new Phaser.Game(400, 490);
+// Initialize Phaser, and create a width 400px by height 490px game
+var game = new Phaser.Game(width, height);
 
 // Add the 'mainState' and call it 'main'
 game.state.add('main', mainState);
