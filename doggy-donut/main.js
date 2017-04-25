@@ -3,8 +3,8 @@
 // local host 8000
 
 // height and width
-var height = 490;
-var width = 400;
+var height = 570;
+var width = 325;
 
 
 // Create our 'main' state that will contain the game
@@ -48,8 +48,9 @@ var mainState = {
       this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
 
       this.score = 0;
-      this.labelScore = game.add.text(20, 20, "0",
-          { font: "30px Arial", fill: "#ffffff" });
+      // 20 20
+      this.labelScore = game.add.text(145, 490, "0",
+          { font: "60px Verdana", fill: "white  " });
 
       // Move the anchor to the left and downward
       this.doggy.anchor.setTo(-0.2, 0.5);
@@ -155,7 +156,7 @@ var mainState = {
 };
 
 // Initialize Phaser, and create a width 400px by height 490px game
-var game = new Phaser.Game(width, height);
+var game = new Phaser.Game(325, 570);
 
 // Add the 'mainState' and call it 'main'
 game.state.add('main', mainState);
