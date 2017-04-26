@@ -1,6 +1,6 @@
 // setup :)
 import React from 'react';
-import classNames from 'classNames';
+import classNames from 'classnames';
 
 // lets us loop through n times quickly without having to use
 // for var n (might need closures to fix scoping problems of var)
@@ -26,9 +26,9 @@ class Masterchefmind extends React.Component{
       // map object to hold the user's guesses
       currentGuess: new Map(),
       // location and value match
-      valuePositionMatchesNum: 0,
+      exactMatches: 0,
       // just value/ color match
-      valueMatchesNum: 0,
+      valueMatches: 0,
       // combination pegs
       pegsInRow: 4,
       // number of tries by user (max is 10)
@@ -58,10 +58,10 @@ class Masterchefmind extends React.Component{
       currentGuess: new Map()
     });
     this.setState({
-      valuePositionMatchesNum: 0
+      exactMatches: 0
     });
     this.setState({
-      valueMatchesNum: 0
+      valueMatches: 0
     });
     // this.setState({
     //   rules: false
@@ -160,15 +160,15 @@ class Masterchefmind extends React.Component{
     // used in our second traversal to count value matches
     let valueMatchKey = 0;
     // declare counter for matches of value and position (red dot)
-    let valuePositionMatchesNum = 0;
+    let exactMatches = 0;
     // declare counter for matches of value only (black dot)
-    let valueMatchesNum = 0;
+    let valueMatches = 0;
     // -------1st traversal to check for value and position matches-------
     for (let [key, value] of pegs) {
       // if the value matches the value in the code's location/key
       if (value === code.get(key)){
         // increment to know how many red dots in hints to show
-        valuePositionMatchesNum++;
+        exactMatches++;
         // delete from pegs and code so as to not count again during
         // 2nd traversal
         code.delete(key);
@@ -182,7 +182,7 @@ class Masterchefmind extends React.Component{
       // if a key has been found
       if (valueMatchKey !== -1){
         // then increment
-        valueMatchesNum++;
+        valueMatches++;
         // delete ... maybe I don't need to delete though?
         code.delete(valueMatchKey);
         pegs.delete(valueMatchKey);
@@ -191,7 +191,7 @@ class Masterchefmind extends React.Component{
     // -------after traversals to check, must update game states!-------
     // time to check if you've won
     // YAY you've won the game :) if 4 === 4
-    if (valuePositionMatchesNum === this.state.pegsInRow){
+    if (exactMatches === this.state.pegsInRow){
       this.setState({
         endGame: true
       });
@@ -217,11 +217,11 @@ class Masterchefmind extends React.Component{
     });
     // give it the newly incremented value
     this.setState({
-      valuePositionMatchesNum: valuePositionMatchesNum
+      exactMatches: exactMatches
     });
     // initialize a new map for the next guess
     this.setState({
-      valueMatchesNum: valueMatchesNum
+      valueMatches: valueMatches
     })
   }
 
@@ -275,7 +275,7 @@ class DecodingBoard extends React.Component{
   }
   render(){
     let rows = [];
-    let rowName = '';
+    let rowName;
     let generateRow = (i) => {
       rowName = 'decodeRow-' + i + 1;
       rows.push(<Row name={rowName} key={i + 1} rowId={i} state={this.props.state} activatePeg={this.props.activatePeg} submitPegs={this.props.submitPegs}/>);
@@ -331,7 +331,7 @@ class Row extends React.Component{
       <div className={rowClassName}>
 
 				<div className='left'>
-					<DecodeRow name={rowName} key={this.props.rowId} rowId={this.props.rowId} state={this.props.state} isCurrentRow={isCurrentRow} activatePeg={this.props.activatePeg}/>
+          <DecodeRow name={rowName} key={this.props.rowId} rowId={this.props.rowId} state={this.props.state} isCurrentRow={isCurrentRow} activatePeg={this.props.activatePeg}/>
 				</div>
 
         <div className='left'>
@@ -359,7 +359,7 @@ class DecodeRow  extends React.Component{
     let pegs = [];
     // let idVal = 0;
     let idVal;
-    let pegClass = '';
+    let pegClass;
     let generatePeg = (i) => {
       idVal = this.props.name + '-' + i + 1;
       if (this.props.state.currentRow === this.props.rowId){
@@ -367,7 +367,7 @@ class DecodeRow  extends React.Component{
       } else {
         pegClass = 'peg';
       }
-      pegs.push(<Peg idVal={idVal} name={this.props.name} value={i + 1} key={idVal} pegCLass={pegClass} isCurrentRow={this.props.isCurrentRow} activatePeg={this.props.activatePeg}/>)
+      pegs.push(<Peg idVal={idVal} name={this.props.name} value={i + 1} key={idVal} pegClass={pegClass} isCurrentRow={this.props.isCurrentRow} activatePeg={this.props.activatePeg}/>);
     }
     times(this.props.state.pegsInRow)(generatePeg);
     return(
@@ -421,9 +421,9 @@ class HintsRow extends React.Component{
     // initialize the hintclass
     let hintClass = '';
     // get the number of valuePositionMatches from the state (updated in submitPegs)
-    let valuePositionMatchesNum = this.props.state.valuePositionMatchesNum;
-    // get the number of the valueMatchesNum from the state (updated in submitPegs)
-    let valueMatchesNum = this.props.state.valueMatchesNum;
+    let exactMatches = this.props.state.exactMatches;
+    // get the number of the valueMatches from the state (updated in submitPegs)
+    let valueMatches = this.props.state.valueMatches;
     // time to make the hint!!!
     let generateHint = (i) => {
 			hintClass = 'hint';
@@ -432,13 +432,13 @@ class HintsRow extends React.Component{
 			//update current row (currentRow is a number that started at 1 whereas rowId began at 0)
 			if (this.props.state.currentRow - 1 === this.props.rowId) {
         // if value/position match, update to know how many black pegs
-				if (valuePositionMatchesNum > 0) {
-					hintClass = hintClass + ' valuePosition-matches';
-					valuePositionMatchesNum--;
+				if (exactMatches > 0) {
+					hintClass = hintClass + ' exact-matches';
+					exactMatches--;
         // if value match, update to know how many white pegs
-				} else if (valueMatchesNum > 0) {
+      } else if (valueMatches > 0) {
 					hintClass = hintClass + ' value-matches';
-					valueMatchesNum--;
+					valueMatches--;
         // if no matches, update to know how many crosses
 				} else {
 					hintClass = hintClass + ' no-matches';
@@ -446,7 +446,7 @@ class HintsRow extends React.Component{
 			}
       // place into the hints array
       // need rowId and key here
-			hints.push(<Hint key={idVal} hintClass={hintClass} rowId={this.props.rowId} state={this.props.state}/>);
+      hints.push(<Hint key={idVal} hintClass={hintClass} rowId={this.props.rowId} state={this.props.state}/>);
 		};
     // loop through pegsinrow times to generateHint
     times(this.props.state.pegsInRow)(generateHint);
@@ -467,8 +467,8 @@ class CodePegs extends React.Component{
     // create the pegs array
     const pegs = [];
     // create the variables
-    let idVal = 0;
-    let pegClass = "";
+    let idVal;
+    let pegClass;
     // loop through the map!!
     for (let [key, value] of this.props.colors){
       idVal = 'peg-' + key;
@@ -505,9 +505,9 @@ class Peg extends React.Component{
   render(){
     return (
       <span className={this.props.pegClass}>
-        <input type='radio' name={this.props.name} value={this.props.value} id={this.props.idVal} onClick={this.props.isCurrentRow ? this.props.activatePeg : null}/>
-        <label htmlFor={this.props.idVal}></label>
-      </span>
+				<input type='radio' name={this.props.name} value={this.props.value} id={this.props.idVal} onClick={this.props.isCurrentRow ? this.props.activatePeg : null}/>
+				<label htmlFor={this.props.idVal}></label>
+			</span>
     )
   }
 }
@@ -516,27 +516,43 @@ class EndGame extends React.Component{
   constructor(props){
     super(props);
   }
-  render(){
-    const endGameInfoClass = classNames({
-    				'endgame': true,
-    				'hidden': !this.props.endGame
-    			});
+	render() {
+		const endGameInfoClass = classNames({
+				'endgame': true,
+				'hidden': !this.props.endGame
+			});
 		const endGameStatusClass = classNames({
 				'endgame-relative': true,
 				'success': this.props.success,
 				'failure': !this.props.success
 			});
-		const infoText = this.props.success ? 'YOU WIN <3' : 'Try again :D';
-    return (
-			<div className={endGameInfoClass}>
-				<div className={endGameStatusClass}>
-					<h2 className="endgame-header">{infoText}</h2>
-					<button className="endgame-btn" onClick={this.props.reloadGame.bind(this)}>PLAY AGAIN</button>
+		const infoText = this.props.success ? 'Congratulations!' : 'GAME OVER!';
+
+		return (
+      <div>
+				<h1><span className="M">M</span><span className="A">A</span><span className="S">S</span><span className="T">T</span><span className="E">E</span><span className="R">R</span><span className="MIND">MIND</span></h1>
+				<Rules rules={this.state.rules} toggleRules={this.toggleRules}/>
+
+				<div className="clearfix">
+					<DecodingBoard state={this.state} activatePeg={this.activatePeg} submitPegs={this.submitPegs}/>
+					<CodePegs selectedPeg={this.state.selectedPeg} colors={this.props.colors} activatePeg={this.activatePeg}/>
 				</div>
-				<div className="endgame-relative endgame-overlay"></div>
+
+				<EndGame endGame={this.state.endGame} success={this.state.success} reloadGame={this.reloadGame}/>
+				<div className="cheat">{this.state.code}</div>
 			</div>
+
+
+
 		);
-}
+	}
 }
 
+// <div className={endGameInfoClass}>
+//   <div className={endGameStatusClass}>
+//     <h2 className="endgame-header">{infoText}</h2>
+//     <button className="endgame-btn" onClick={this.props.reloadGame}>PLAY AGAIN</button>
+//   </div>
+//   <div className="endgame-relative endgame-overlay"></div>
+// </div>
 export default Masterchefmind
