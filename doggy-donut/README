@@ -1,0 +1,7 @@
+doggy-donut
+
+to play, open the doggy-donut dir in terminal.
+type this command in terminal: python -m SimpleHTTPServer
+in a browser, go here: http://127.0.0.1:8000/
+
+hit the spacebar to make the doggy jump
